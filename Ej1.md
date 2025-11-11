@@ -41,7 +41,9 @@ sudo apt upgrade -y
 ```
 
 # 📸 Inserta aquí una captura del terminal tras ejecutar los comandos:
-# ![Actualización del sistema](imagenes/update.png)
+# ![Actualización del sistema](imagenes/actualizar1.png)
+# ![Actualización del sistema](imagenes/actualizar2.png)
+
 
 # 🔹 2. Instalar Apache
 # Instalamos el servidor web con el siguiente comando:
