@@ -19,9 +19,9 @@ El conjunto **LAMP** está formado por:
 | Componente | Función |
 |-------------|----------|
 | **Linux** | Sistema operativo base. |
-| **Apache** | Servidor web que muestra las páginas. |
-| **MySQL** | Base de datos. |
-| **PHP** | Lenguaje de servidor. |
+| **Apache** | Servidor web que muestra las páginas web. |
+| **MySQL** | Sistema gestor de bases de datos. |
+| **PHP** | Lenguaje de programación del lado del servidor. |
 
 En esta primera actividad instalaremos **Apache**, el servidor web.
 
@@ -29,7 +29,51 @@ En esta primera actividad instalaremos **Apache**, el servidor web.
 
 ## ⚙️ Pasos para instalar Apache en Ubuntu
 
-### 1️⃣ Actualizar repositorios del sistema
+A continuación se explica el proceso completo para instalar Apache desde la terminal de Ubuntu.
+
+---
+
+### 🔹 1. Actualizar el sistema
+
+Lo primero es asegurarse de que los repositorios y paquetes del sistema están actualizados.
+
+Ejecuta estos comandos en la terminal:
+
 ```bash
 sudo apt update
 sudo apt upgrade -y
+📸 Inserta aquí una captura del terminal tras ejecutar el comando:
+
+
+🔹 2. Instalar Apache
+Ahora instalamos el servidor web con el siguiente comando:
+
+bash
+Copiar código
+sudo apt install apache2 -y
+Esto descargará e instalará Apache automáticamente.
+
+📸 Captura recomendada:
+
+
+🔹 3. Comprobar que Apache está funcionando
+Para verificar que el servicio se ha iniciado correctamente, escribe:
+
+bash
+Copiar código
+sudo systemctl status apache2
+Deberías ver el mensaje active (running) en verde.
+Esto significa que Apache está funcionando correctamente.
+
+📸 Captura recomendada:
+
+
+🔹 4. Probar Apache en el navegador
+Abre tu navegador web y entra en la siguiente dirección:
+
+arduino
+Copiar código
+http://localhost
+Si ves una página con el texto “It works!”, significa que Apache está funcionando correctamente y sirve contenido web localmente.
+
+📸 Captura recomendada:
