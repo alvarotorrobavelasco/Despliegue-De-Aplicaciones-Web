@@ -20,18 +20,6 @@ Esta documentación recoge todos los pasos realizados y las capturas correspondi
 
 ---
 
-# 📸 Capturas
-
-Todas las capturas deben ir dentro de:
-
-```
-/docs/imagenes/
-```
-
-Este README ya incluye los enlaces. Solo sube tus fotos con el mismo nombre.
-
----
-
 # ✨ 1. Configuración inicial
 
 ## 🔧 1.1 Actualización del sistema
