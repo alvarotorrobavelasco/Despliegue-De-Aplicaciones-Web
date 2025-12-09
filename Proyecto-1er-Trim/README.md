@@ -41,3 +41,21 @@ El propósito es comprender cómo desplegar servicios web reales con distintos s
 ```bash
 sudo apt update
 sudo apt install apache2
+```
+# 2️⃣ Configuración de dominios internos
+
+Para trabajar con varios sitios web en la misma máquina, necesitamos crear dominios internos que apunten a `localhost`.  
+Esto se hace editando el archivo **/etc/hosts**, que actúa como un pequeño DNS local.
+
+### 📝 Añadir los dominios al sistema
+
+Editamos el archivo con permisos de administrador:
+
+```bash
+sudo nano /etc/hosts
+
+127.0.0.1   centro.intranet
+127.0.0.1   departamentos.centro.intranet
+127.0.0.1   servidor2.centro.intranet
+```
+
