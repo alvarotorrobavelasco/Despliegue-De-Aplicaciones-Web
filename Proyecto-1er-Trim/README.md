@@ -1,113 +1,92 @@
-🎓 README.md — Práctica Servidores Web (1º Trimestre)
-Despliegue de Aplicaciones Web – DAW
-📑 Índice
+# 🌐 Práctica de Servidores Web – 1º Trimestre  
+## 🏫 Despliegue de Aplicaciones Web (DAW)
 
-Introducción
+---
 
-Instalación del servidor Apache
+## 📘 Introducción
 
-Configuración de dominios internos
+En esta práctica se despliega un entorno profesional de servidores web para un instituto, utilizando:
 
-Activación de módulos PHP y MySQL
+- **Apache** como servidor principal  
+- **WordPress** en `centro.intranet`  
+- **Aplicación Python con WSGI** en `departamentos.centro.intranet`  
+- **Autenticación básica** sobre la aplicación Python  
+- **AWStats** para estadísticas del servidor  
+- **Nginx** como segundo servidor web en `servidor2.centro.intranet:8080`  
+- **phpMyAdmin** funcionando bajo Nginx  
 
-Instalación y configuración de WordPress
+El objetivo es aprender a instalar, configurar y gestionar múltiples servicios web en Ubuntu de forma profesional.
 
-Instalación y configuración de aplicación Python con WSGI
+---
 
-Protección de la app Python con autenticación
+# 📑 Índice
 
-Instalación y configuración de AWStats
+1. [Instalación del servidor Apache](#instalación-del-servidor-apache)  
+2. [Configuración de dominios internos](#configuración-de-dominios-internos)  
+3. [Instalación de PHP y MySQL](#instalación-de-php-y-mysql)  
+4. [Instalación y configuración de WordPress](#instalación-y-configuración-de-wordpress)  
+5. [Aplicación Python con WSGI](#aplicación-python-con-wsgi)  
+6. [Protección de la aplicación Python](#protección-de-la-aplicación-python)  
+7. [Instalación y configuración de AWStats](#instalación-y-configuración-de-awstats)  
+8. [Instalación de Nginx en puerto 8080](#instalación-de-nginx-en-puerto-8080)  
+9. [Instalación de phpMyAdmin](#instalación-de-phpmyadmin)  
+10. [Capturas de pantalla](#capturas-de-pantalla)  
+11. [Conclusiones](#conclusiones)
 
-Instalación de Nginx en puerto 8080 y phpMyAdmin
+---
 
-Capturas de pantalla
+# 🔹 Instalación del servidor Apache
 
-Conclusiones
-
-Introducción
-
-En esta práctica se implementa un entorno realista de servidores web para un instituto usando:
-
-Apache como servidor principal
-
-WordPress en el dominio centro.intranet
-
-Aplicación Python con WSGI en departamentos.centro.intranet
-
-Autenticación básica para proteger la aplicación
-
-AWStats para estadísticas
-
-Nginx como segundo servidor en servidor2.centro.intranet:8080
-
-phpMyAdmin funcionando en Nginx
-
-Configuración mediante VirtualHosts, módulos y servicios internos
-
-El objetivo es aprender a desplegar servicios web profesionales y multi-tecnología.
-
-Instalación del servidor Apache
-Instalación:
+### 🛠️ Instalación:
+```bash
 sudo apt update
 sudo apt install apache2
-
-Comprobación:
+🔍 Comprobación:
+bash
+Copiar código
 systemctl status apache2
+📸 Inserte aquí la captura del estado de Apache
 
+<!-- EJEMPLO → ![Apache activo](imagenes/apache_status.png) -->
+🔹 Configuración de dominios internos
+Editar el archivo /etc/hosts:
 
-📸 Captura recomendada: estado de Apache funcionando
+Copiar código
+127.0.0.1 centro.intranet  
+127.0.0.1 departamentos.centro.intranet  
+127.0.0.1 servidor2.centro.intranet  
+📸 Captura del archivo hosts correctamente configurado
 
-<!-- INSERTAR IMAGEN AQUÍ -->
-Configuración de dominios internos
-
-Editar /etc/hosts:
-
-sudo nano /etc/hosts
-
-
-Añadir:
-
-127.0.0.1 centro.intranet
-127.0.0.1 departamentos.centro.intranet
-127.0.0.1 servidor2.centro.intranet
-
-
-📸 Captura recomendada: edición del archivo hosts
-
-<!-- INSERTAR IMAGEN AQUÍ -->
-Activación de módulos PHP y MySQL
+<!-- INSERTAR IMAGEN -->
+🔹 Instalación de PHP y MySQL
+bash
+Copiar código
 sudo apt install php libapache2-mod-php php-mysql
 sudo apt install mariadb-server mariadb-client
 sudo systemctl restart apache2
+📸 Captura recomendada: phpinfo() funcionando
 
-
-📸 Captura recomendada: salida del comando phpinfo()
-
-<!-- INSERTAR IMAGEN AQUÍ -->
-Instalación y configuración de WordPress
-Dominio: centro.intranet
-1. Descarga de WordPress
+<!-- INSERTAR IMAGEN -->
+🔹 Instalación y configuración de WordPress
+🌍 Dominio: centro.intranet
+📥 Descarga e instalación
+bash
+Copiar código
 cd /var/www
 sudo wget https://wordpress.org/latest.tar.gz
 sudo tar -xvzf latest.tar.gz
 sudo mv wordpress centro.intranet
 sudo chown -R www-data:www-data centro.intranet
-
-2. Crear base de datos en MySQL/MariaDB
+🗄️ Creación de la base de datos
+sql
+Copiar código
 CREATE DATABASE wpdb;
 CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'clave123';
 GRANT ALL PRIVILEGES ON wpdb.* TO 'wpuser'@'localhost';
 FLUSH PRIVILEGES;
-
-3. Crear VirtualHost
-
-Crear archivo:
-
-sudo nano /etc/apache2/sites-available/centro.intranet.conf
-
-
-Contenido:
-
+🧩 VirtualHost de WordPress
+apache
+Copiar código
 <VirtualHost *:80>
     ServerName centro.intranet
     DocumentRoot /var/www/centro.intranet
@@ -117,30 +96,21 @@ Contenido:
         Require all granted
     </Directory>
 </VirtualHost>
-
-
 Activación:
 
+bash
+Copiar código
 sudo a2ensite centro.intranet.conf
 sudo a2enmod rewrite
 sudo systemctl reload apache2
+📸 Captura del instalador de WordPress
 
-
-📸 Captura recomendada: instalador de WordPress cargado
-
-<!-- INSERTAR IMAGEN AQUÍ -->
-Instalación y configuración de aplicación Python con WSGI
-Dominio: departamentos.centro.intranet
-1. Instalar módulo WSGI
-sudo apt install libapache2-mod-wsgi-py3
-
-2. Crear aplicación Python
-sudo mkdir -p /var/www/departamentos
-sudo nano /var/www/departamentos/app.wsgi
-
-
-Contenido:
-
+<!-- INSERTAR IMAGEN -->
+🔹 Aplicación Python con WSGI
+🌍 Dominio: departamentos.centro.intranet
+📄 Archivo WSGI
+python
+Copiar código
 def application(environ, start_response):
     status = '200 OK'
     output = b"Aplicación Python funcionando correctamente"
@@ -148,13 +118,9 @@ def application(environ, start_response):
                ('Content-Length', str(len(output)))]
     start_response(status, headers)
     return [output]
-
-3. Crear VirtualHost
-sudo nano /etc/apache2/sites-available/departamentos.centro.intranet.conf
-
-
-Contenido:
-
+🧩 VirtualHost de Python + WSGI
+apache
+Copiar código
 <VirtualHost *:80>
     ServerName departamentos.centro.intranet
     WSGIScriptAlias / /var/www/departamentos/app.wsgi
@@ -163,66 +129,53 @@ Contenido:
         Require all granted
     </Directory>
 </VirtualHost>
+📸 Captura: aplicación Python respondiendo en navegador
 
+<!-- INSERTAR IMAGEN -->
+🔹 Protección de la aplicación Python
+🔐 Autenticación básica (htpasswd)
+Crear usuario:
 
-Activarlo:
-
-sudo a2ensite departamentos.centro.intranet.conf
-sudo systemctl reload apache2
-
-
-📸 Captura sugerida: mensaje "Aplicación Python funcionando correctamente"
-
-<!-- INSERTAR IMAGEN AQUÍ -->
-Protección de la app Python con autenticación
-
-Crear archivo htpasswd:
-
+bash
+Copiar código
 sudo htpasswd -c /etc/apache2/.pythonauth adminpy
+Añadir al VirtualHost:
 
-
-Añadir autenticación en el VirtualHost:
-
+apache
+Copiar código
 <Directory /var/www/departamentos>
     AuthType Basic
     AuthName "Zona protegida"
     AuthUserFile /etc/apache2/.pythonauth
     Require valid-user
 </Directory>
+📸 Captura: ventana de autenticación solicitada por Apache
 
-
-📸 Captura sugerida: ventana de autenticación del navegador
-
-<!-- INSERTAR IMAGEN AQUÍ -->
-Instalación y configuración de AWStats
+<!-- INSERTAR IMAGEN -->
+🔹 Instalación y configuración de AWStats
+bash
+Copiar código
 sudo apt install awstats
 sudo cp /etc/awstats/awstats.conf /etc/awstats/awstats.centro.intranet.conf
 sudo a2enconf awstats
 sudo systemctl reload apache2
+Acceso web:
 
-
-Acceder:
-
+arduino
+Copiar código
 http://localhost/awstats/awstats.pl?config=centro.intranet
+📸 Captura: panel de estadísticas AWStats funcionando
 
-
-📸 Captura sugerida: panel de estadísticas AWStats
-
-<!-- INSERTAR IMAGEN AQUÍ -->
-Instalación de Nginx en puerto 8080 y phpMyAdmin
-Dominio: servidor2.centro.intranet
-1. Instalar Nginx y PHP-FPM
+<!-- INSERTAR IMAGEN -->
+🔹 Instalación de Nginx en puerto 8080
+🌍 Dominio: servidor2.centro.intranet
+🛠️ Instalación
+bash
+Copiar código
 sudo apt install nginx php-fpm
-
-2. Crear VirtualHost en Nginx
-
-Archivo:
-
-sudo nano /etc/nginx/sites-available/servidor2.centro.intranet
-
-
-Contenido:
-
+🧩 VirtualHost de Nginx
+nginx
+Copiar código
 server {
     listen 8080;
     server_name servidor2.centro.intranet;
@@ -235,55 +188,52 @@ server {
         fastcgi_pass unix:/run/php/php8.1-fpm.sock;
     }
 }
+📸 Captura: servidor Nginx activo en puerto 8080
 
-
-Activación:
-
-sudo mkdir /var/www/servidor2
-sudo ln -s /etc/nginx/sites-available/servidor2.centro.intranet /etc/nginx/sites-enabled/
-sudo systemctl restart nginx
-
-3. Instalar phpMyAdmin
+<!-- INSERTAR IMAGEN -->
+🔹 Instalación de phpMyAdmin
+bash
+Copiar código
 sudo apt install phpmyadmin
-
-
 Acceso:
 
+bash
+Copiar código
 http://servidor2.centro.intranet:8080/phpmyadmin
+📸 Captura: phpMyAdmin cargando correctamente
 
-
-📸 Captura sugerida: phpMyAdmin cargando correctamente
-
-<!-- INSERTAR IMAGEN AQUÍ -->
-Capturas de pantalla
-
-Aquí puedes insertar todas tus imágenes organizadas:
-
+<!-- INSERTAR IMAGEN -->
+📸 Capturas de pantalla
+Aquí introduces todas tus imágenes:
+bash
+Copiar código
 ## Apache funcionando
 ![Apache](imagenes/apache.png)
 
 ## WordPress
-![WordPress](imagenes/wp.png)
+![WordPress](imagenes/wordpress.png)
 
 ## App Python
-![Python](imagenes/python.png)
+![Python](imagenes/python_app.png)
 
-Conclusiones
+## AWStats
+![AWStats](imagenes/awstats.png)
+🧾 Conclusiones
+Esta práctica permite dominar:
 
-La práctica demuestra habilidades avanzadas en:
+Administración de Apache y Nginx
 
-Administración de servidores web
+Configuración de múltiples dominios virtuales
 
-Configuración de múltiples dominios internos
+Integración de PHP, WordPress y MySQL
 
-WordPress + PHP + MySQL
+Ejecución de aplicaciones Python con WSGI
 
-Python + WSGI + seguridad básica
+Seguridad mediante autenticación HTTP
 
 Análisis de logs con AWStats
 
-Nginx + PHP-FPM como servidor alternativo
+Gestión simultánea de dos servidores web
 
-phpMyAdmin bajo otro servidor distinto
+El resultado es un entorno profesional totalmente funcional para despliegue web real.
 
-El resultado es un entorno profesional totalmente funcional.
