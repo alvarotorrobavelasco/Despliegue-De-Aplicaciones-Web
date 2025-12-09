@@ -1,65 +1,113 @@
-#!/bin/bash
-#############################################################
-# PRACTICA COMPLETA SERVIDORES WEB - DAW
-# Script ÚNICO que instala todo + genera README PREMIUM
-# Fecha límite: 28 Nov
-#############################################################
+🎓 README.md — Práctica Servidores Web (1º Trimestre)
+Despliegue de Aplicaciones Web – DAW
+📑 Índice
 
-clear
-echo "==========================================="
-echo " INSTALACIÓN COMPLETA SERVIDORES WEB (DAW) "
-echo "==========================================="
+Introducción
 
-#############################################
-# 1. ACTUALIZAR SISTEMA
-#############################################
-echo "📌 Actualizando sistema..."
-apt update -y && apt upgrade -y
+Instalación del servidor Apache
+
+Configuración de dominios internos
+
+Activación de módulos PHP y MySQL
+
+Instalación y configuración de WordPress
+
+Instalación y configuración de aplicación Python con WSGI
+
+Protección de la app Python con autenticación
+
+Instalación y configuración de AWStats
+
+Instalación de Nginx en puerto 8080 y phpMyAdmin
+
+Capturas de pantalla
+
+Conclusiones
+
+Introducción
+
+En esta práctica se implementa un entorno realista de servidores web para un instituto usando:
+
+Apache como servidor principal
+
+WordPress en el dominio centro.intranet
+
+Aplicación Python con WSGI en departamentos.centro.intranet
+
+Autenticación básica para proteger la aplicación
+
+AWStats para estadísticas
+
+Nginx como segundo servidor en servidor2.centro.intranet:8080
+
+phpMyAdmin funcionando en Nginx
+
+Configuración mediante VirtualHosts, módulos y servicios internos
+
+El objetivo es aprender a desplegar servicios web profesionales y multi-tecnología.
+
+Instalación del servidor Apache
+Instalación:
+sudo apt update
+sudo apt install apache2
+
+Comprobación:
+systemctl status apache2
 
 
-#############################################
-# 2. INSTALAR APACHE
-#############################################
-echo "📌 Instalando Apache..."
-apt install apache2 -y
-systemctl enable apache2
-systemctl restart apache2
+📸 Captura recomendada: estado de Apache funcionando
+
+<!-- INSERTAR IMAGEN AQUÍ -->
+Configuración de dominios internos
+
+Editar /etc/hosts:
+
+sudo nano /etc/hosts
 
 
-#############################################
-# 3. CONFIGURAR DOMINIOS INTERNOS
-#############################################
-echo "📌 Configurando /etc/hosts..."
-cat >> /etc/hosts <<EOF
+Añadir:
+
 127.0.0.1 centro.intranet
 127.0.0.1 departamentos.centro.intranet
 127.0.0.1 servidor2.centro.intranet
-EOF
 
 
-#############################################
-# 4. INSTALAR PHP + MYSQL/MARIADB
-#############################################
-echo "📌 Instalando PHP + MySQL..."
-apt install php libapache2-mod-php php-mysql -y
-apt install mariadb-server mariadb-client -y
+📸 Captura recomendada: edición del archivo hosts
+
+<!-- INSERTAR IMAGEN AQUÍ -->
+Activación de módulos PHP y MySQL
+sudo apt install php libapache2-mod-php php-mysql
+sudo apt install mariadb-server mariadb-client
+sudo systemctl restart apache2
 
 
-#############################################
-# 5. INSTALAR WORDPRESS EN centro.intranet
-#############################################
-echo "📌 Instalando WordPress..."
+📸 Captura recomendada: salida del comando phpinfo()
+
+<!-- INSERTAR IMAGEN AQUÍ -->
+Instalación y configuración de WordPress
+Dominio: centro.intranet
+1. Descarga de WordPress
 cd /var/www
-wget https://wordpress.org/latest.tar.gz
-tar -xvzf latest.tar.gz
-mv wordpress centro.intranet
-chown -R www-data:www-data /var/www/centro.intranet
+sudo wget https://wordpress.org/latest.tar.gz
+sudo tar -xvzf latest.tar.gz
+sudo mv wordpress centro.intranet
+sudo chown -R www-data:www-data centro.intranet
 
-#############################################
-# CREAR VIRTUALHOST WORDPRESS
-#############################################
-echo "📌 Creando VirtualHost centro.intranet..."
-cat > /etc/apache2/sites-available/centro.intranet.conf <<EOF
+2. Crear base de datos en MySQL/MariaDB
+CREATE DATABASE wpdb;
+CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'clave123';
+GRANT ALL PRIVILEGES ON wpdb.* TO 'wpuser'@'localhost';
+FLUSH PRIVILEGES;
+
+3. Crear VirtualHost
+
+Crear archivo:
+
+sudo nano /etc/apache2/sites-available/centro.intranet.conf
+
+
+Contenido:
+
 <VirtualHost *:80>
     ServerName centro.intranet
     DocumentRoot /var/www/centro.intranet
@@ -69,36 +117,44 @@ cat > /etc/apache2/sites-available/centro.intranet.conf <<EOF
         Require all granted
     </Directory>
 </VirtualHost>
-EOF
-
-a2ensite centro.intranet.conf
-a2enmod rewrite
-systemctl reload apache2
 
 
-#############################################
-# 6. INSTALAR WSGI + PYTHON APP
-#############################################
-echo "📌 Instalando mod_wsgi..."
-apt install libapache2-mod-wsgi-py3 -y
+Activación:
 
-mkdir -p /var/www/departamentos
+sudo a2ensite centro.intranet.conf
+sudo a2enmod rewrite
+sudo systemctl reload apache2
 
-cat > /var/www/departamentos/app.wsgi <<EOF
+
+📸 Captura recomendada: instalador de WordPress cargado
+
+<!-- INSERTAR IMAGEN AQUÍ -->
+Instalación y configuración de aplicación Python con WSGI
+Dominio: departamentos.centro.intranet
+1. Instalar módulo WSGI
+sudo apt install libapache2-mod-wsgi-py3
+
+2. Crear aplicación Python
+sudo mkdir -p /var/www/departamentos
+sudo nano /var/www/departamentos/app.wsgi
+
+
+Contenido:
+
 def application(environ, start_response):
-    status = "200 OK"
+    status = '200 OK'
     output = b"Aplicación Python funcionando correctamente"
-    headers = [("Content-Type", "text/plain"),
-               ("Content-Length", str(len(output)))]
+    headers = [('Content-Type', 'text/plain'),
+               ('Content-Length', str(len(output)))]
     start_response(status, headers)
     return [output]
-EOF
 
-#############################################
-# VIRTUALHOST PYTHON
-#############################################
-echo "📌 Creando VirtualHost departamentos.centro.intranet..."
-cat > /etc/apache2/sites-available/departamentos.centro.intranet.conf <<EOF
+3. Crear VirtualHost
+sudo nano /etc/apache2/sites-available/departamentos.centro.intranet.conf
+
+
+Contenido:
+
 <VirtualHost *:80>
     ServerName departamentos.centro.intranet
     WSGIScriptAlias / /var/www/departamentos/app.wsgi
@@ -107,20 +163,25 @@ cat > /etc/apache2/sites-available/departamentos.centro.intranet.conf <<EOF
         Require all granted
     </Directory>
 </VirtualHost>
-EOF
-
-a2ensite departamentos.centro.intranet.conf
-systemctl reload apache2
 
 
-#############################################
-# 7. PROTEGER APP PYTHON (AUTENTICACIÓN)
-#############################################
-echo "📌 Protegiendo aplicación Python..."
-echo "Introduce contraseña para usuario adminpy:"
-htpasswd -c /etc/apache2/.pythonauth adminpy
+Activarlo:
 
-cat >> /etc/apache2/sites-available/departamentos.centro.intranet.conf <<EOF
+sudo a2ensite departamentos.centro.intranet.conf
+sudo systemctl reload apache2
+
+
+📸 Captura sugerida: mensaje "Aplicación Python funcionando correctamente"
+
+<!-- INSERTAR IMAGEN AQUÍ -->
+Protección de la app Python con autenticación
+
+Crear archivo htpasswd:
+
+sudo htpasswd -c /etc/apache2/.pythonauth adminpy
+
+
+Añadir autenticación en el VirtualHost:
 
 <Directory /var/www/departamentos>
     AuthType Basic
@@ -128,30 +189,40 @@ cat >> /etc/apache2/sites-available/departamentos.centro.intranet.conf <<EOF
     AuthUserFile /etc/apache2/.pythonauth
     Require valid-user
 </Directory>
-EOF
-
-systemctl reload apache2
 
 
-#############################################
-# 8. INSTALAR AWSTATS
-#############################################
-echo "📌 Instalando AWStats..."
-apt install awstats -y
-cp /etc/awstats/awstats.conf /etc/awstats/awstats.centro.intranet.conf
-a2enconf awstats
-systemctl reload apache2
+📸 Captura sugerida: ventana de autenticación del navegador
+
+<!-- INSERTAR IMAGEN AQUÍ -->
+Instalación y configuración de AWStats
+sudo apt install awstats
+sudo cp /etc/awstats/awstats.conf /etc/awstats/awstats.centro.intranet.conf
+sudo a2enconf awstats
+sudo systemctl reload apache2
 
 
-#############################################
-# 9. INSTALAR NGINX + PHP-FPM EN PUERTO 8080
-#############################################
-echo "📌 Instalando Nginx + PHP-FPM..."
-apt install nginx php-fpm -y
+Acceder:
 
-mkdir -p /var/www/servidor2
+http://localhost/awstats/awstats.pl?config=centro.intranet
 
-cat > /etc/nginx/sites-available/servidor2.centro.intranet <<EOF
+
+📸 Captura sugerida: panel de estadísticas AWStats
+
+<!-- INSERTAR IMAGEN AQUÍ -->
+Instalación de Nginx en puerto 8080 y phpMyAdmin
+Dominio: servidor2.centro.intranet
+1. Instalar Nginx y PHP-FPM
+sudo apt install nginx php-fpm
+
+2. Crear VirtualHost en Nginx
+
+Archivo:
+
+sudo nano /etc/nginx/sites-available/servidor2.centro.intranet
+
+
+Contenido:
+
 server {
     listen 8080;
     server_name servidor2.centro.intranet;
@@ -164,170 +235,55 @@ server {
         fastcgi_pass unix:/run/php/php8.1-fpm.sock;
     }
 }
-EOF
-
-ln -s /etc/nginx/sites-available/servidor2.centro.intranet /etc/nginx/sites-enabled/
-systemctl restart nginx
 
 
-#############################################
-# 10. INSTALAR PHPMYADMIN
-#############################################
-echo "📌 Instalando phpMyAdmin..."
-apt install phpmyadmin -y
+Activación:
 
+sudo mkdir /var/www/servidor2
+sudo ln -s /etc/nginx/sites-available/servidor2.centro.intranet /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
 
-#############################################
-# 11. GENERAR README.md PREMIUM
-#############################################
-echo "📌 Generando README.md PREMIUM..."
+3. Instalar phpMyAdmin
+sudo apt install phpmyadmin
 
-cat > README.md <<'EOF'
-# 🌐 Práctica Servidores Web — PREMIUM  
-## Despliegue de Aplicaciones Web (DAW)
-
----
-
-# 📘 1. Introducción  
-Este proyecto despliega un entorno web completo con Apache, WordPress, Python WSGI, autenticación, AWStats, Nginx, PHP-FPM y phpMyAdmin.  
-Se utilizan dominios internos:  
-- centro.intranet  
-- departamentos.centro.intranet  
-- servidor2.centro.intranet  
-
----
-
-# 📘 2. Instalación del servidor Apache  
-
-```bash
-sudo apt update
-sudo apt install apache2
-systemctl status apache2
-```
-
-<!-- INSERTAR IMAGEN APACHE AQUI -->
-
----
-
-# 📘 3. Configuración de dominios internos  
-
-Editar `/etc/hosts`:
-
-```
-127.0.0.1 centro.intranet
-127.0.0.1 departamentos.centro.intranet
-127.0.0.1 servidor2.centro.intranet
-```
-
-<!-- INSERTAR IMAGEN ETCHOSTS AQUI -->
-
----
-
-# 📘 4. Activación de módulos PHP y MySQL  
-
-```bash
-sudo apt install php libapache2-mod-php php-mysql
-sudo apt install mariadb-server mariadb-client
-sudo systemctl restart apache2
-```
-
-<!-- INSERTAR IMAGEN PHPINFO AQUI -->
-
----
-
-# 📘 5. Instalación de WordPress (centro.intranet)
-
-```bash
-wget https://wordpress.org/latest.tar.gz
-tar -xvzf latest.tar.gz
-mv wordpress centro.intranet
-```
-
-VirtualHost:
-
-```apache
-<VirtualHost *:80>
-    ServerName centro.intranet
-    DocumentRoot /var/www/centro.intranet
-</VirtualHost>
-```
-
-<!-- INSERTAR IMAGEN WORDPRESS AQUI -->
-
----
-
-# 📘 6. Instalación WSGI y aplicación Python  
-
-Archivo WSGI:
-
-```python
-def application(...):
-    return [b"Aplicación Python funcionando correctamente"]
-```
-
-<!-- INSERTAR IMAGEN APP PYTHON AQUI -->
-
----
-
-# 📘 7. Autenticación Basic  
-
-```apache
-AuthType Basic
-AuthUserFile /etc/apache2/.pythonauth
-Require valid-user
-```
-
-<!-- INSERTAR IMAGEN AUTENTICACION AQUI -->
-
----
-
-# 📘 8. AWStats  
 
 Acceso:
-```
-http://localhost/awstats/awstats.pl?config=centro.intranet
-```
 
-<!-- INSERTAR IMAGEN AWSTATS AQUI -->
-
----
-
-# 📘 9. Nginx como segundo servidor (8080)
-
-VirtualHost:
-
-```nginx
-server {
-    listen 8080;
-    server_name servidor2.centro.intranet;
-}
-```
-
-<!-- INSERTAR IMAGEN NGINX AQUI -->
-
----
-
-# 📘 10. phpMyAdmin bajo Nginx  
-
-Acceso:
-```
 http://servidor2.centro.intranet:8080/phpmyadmin
-```
 
-<!-- INSERTAR IMAGEN PHPMYADMIN AQUI -->
 
----
+📸 Captura sugerida: phpMyAdmin cargando correctamente
 
-# 🎯 Conclusiones  
-Se ha desplegado un sistema profesional con:
+<!-- INSERTAR IMAGEN AQUÍ -->
+Capturas de pantalla
 
-- Apache + WordPress  
-- Python con WSGI  
-- Autenticación Basic  
-- AWStats  
-- Nginx + PHP-FPM  
-- phpMyAdmin  
+Aquí puedes insertar todas tus imágenes organizadas:
 
-EOF
+## Apache funcionando
+![Apache](imagenes/apache.png)
 
-echo "🎉 SCRIPT COMPLETADO — README PREMIUM GENERADO"
+## WordPress
+![WordPress](imagenes/wp.png)
+
+## App Python
+![Python](imagenes/python.png)
+
+Conclusiones
+
+La práctica demuestra habilidades avanzadas en:
+
+Administración de servidores web
+
+Configuración de múltiples dominios internos
+
+WordPress + PHP + MySQL
+
+Python + WSGI + seguridad básica
+
+Análisis de logs con AWStats
+
+Nginx + PHP-FPM como servidor alternativo
+
+phpMyAdmin bajo otro servidor distinto
+
+El resultado es un entorno profesional totalmente funcional.
