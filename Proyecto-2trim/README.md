@@ -46,6 +46,7 @@ cd ~/infraestructura-web
 - Conectividad de red verificada.
 - Estructura de directorios del proyecto creada.
 ![Descripción](images/1.png)
+![Descripción](images/8.png)
 ---
 
 ## 🌐 2. Despliegue del stack Apache + PHP + MariaDB
