@@ -83,8 +83,8 @@ sudo systemctl reload apache2
 - PHP 8.3 integrado y operativo.
 - MariaDB en funcionamiento.
 - Interfaz phpMyAdmin accesible desde el navegador.
-  ![Descripción](images/2.png)
-  ![Descripción](images/3.png)
+  ![Descripción](images/9.png)
+  ![Descripción](images/10.png)
 
 ---
 
