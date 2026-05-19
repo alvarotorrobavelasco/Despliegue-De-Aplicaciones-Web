@@ -45,7 +45,7 @@ cd ~/infraestructura-web
 - Utilidades básicas disponibles.
 - Conectividad de red verificada.
 - Estructura de directorios del proyecto creada.
-
+![Descripción](images/1.png)
 ---
 
 ## 🌐 2. Despliegue del stack Apache + PHP + MariaDB
