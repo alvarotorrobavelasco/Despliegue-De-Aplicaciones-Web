@@ -1,31 +1,31 @@
 # 🌐 Proyecto Práctico - Infraestructura de Servidor Web y Servicios de Red (DAW 2025/26)
 
-**Autor:** Álvaro  
+**Autor:** Álvaro Torroba Velasco
 **Sistema Operativo:** Ubuntu Desktop 24.04 LTS sobre VirtualBox  
 **Configuración de red:** Adaptador Puente (Bridged Adapter)  
 **IP del servidor:** 192.168.1.135  
 **Dominio local:** marisma.local  
-**Directorio del proyecto:** `~/infraestructura-web/`
+**Directorio de trabajo:** `~/infraestructura-web/`
 
 ---
 
 ## 📑 Índice
 
-1. Preparación del entorno
-2. Despliegue del stack Apache + PHP + MariaDB
-3. Script de creación automática de clientes
-4. FTP seguro, acceso SSH y soporte Python
-5. Servidor DNS local con BIND9
-6. Pruebas y verificación del sistema
-7. Guía de uso del servidor
-8. Arquitectura y servicios activos
+1. Puesta a punto del sistema
+2. Instalación y configuración del entorno LAMP
+3. Automatización del alta de clientes
+4. Acceso remoto seguro y soporte Python
+5. Servicio DNS con BIND9
+6. Comprobaciones finales
+7. Manual de uso
+8. Visión general de la infraestructura
 
 ---
 
-## ⚙️ 1. Preparación del entorno
+## ⚙️ 1. Puesta a punto del sistema
 
-### 📝 Objetivo
-Partir de un sistema limpio, actualizar los repositorios e instalar las herramientas de trabajo necesarias antes de comenzar el despliegue de servicios.
+### 📝 ¿Qué se hace en este paso?
+Antes de instalar cualquier servicio, se actualiza el sistema operativo por completo y se instalan las herramientas básicas que se necesitarán durante todo el proyecto. También se crea la estructura de carpetas donde se organizará el trabajo.
 
 ### 💻 Comandos ejecutados
 
@@ -40,19 +40,21 @@ mkdir -p ~/infraestructura-web/{scripts,images,backups}
 cd ~/infraestructura-web
 ```
 
-### ✅ Resultado
-- Paquetes del sistema actualizados sin errores.
-- Utilidades básicas disponibles.
-- Conectividad de red verificada.
-- Estructura de directorios del proyecto creada.
-![Descripción](images/1.png)
-![Descripción](images/8.png)
+### ✅ Lo que se consigue
+- Sistema al día con los últimos parches disponibles.
+- Herramientas de red y utilidades instaladas.
+- Red funcionando correctamente antes de continuar.
+- Carpetas del proyecto listas para usarse.
+
+![Captura actualización](images/1.png)
+![Captura estructura](images/8.png)
+
 ---
 
-## 🌐 2. Despliegue del stack Apache + PHP + MariaDB
+## 🌐 2. Instalación y configuración del entorno LAMP
 
-### 📝 Objetivo
-Montar un entorno LAMP completo capaz de servir aplicaciones web dinámicas y gestionar bases de datos a través de phpMyAdmin.
+### 📝 ¿Qué se hace en este paso?
+Se despliega el stack LAMP (Linux, Apache, MySQL/MariaDB, PHP) que será la base para servir aplicaciones web. Se añade también phpMyAdmin para gestionar las bases de datos desde el navegador.
 
 ### 💻 Instalación de paquetes
 
@@ -62,7 +64,7 @@ php php-cli php-mysql php-curl php-gd php-xml php-mbstring php-zip \
 libapache2-mod-php phpmyadmin
 ```
 
-### 🔧 Habilitación y configuración
+### 🔧 Puesta en marcha
 
 ```bash
 sudo systemctl enable apache2 mariadb
@@ -78,51 +80,54 @@ sudo a2enconf phpmyadmin
 sudo systemctl reload apache2
 ```
 
-### ✅ Resultado
-- Apache2 sirviendo peticiones en el puerto 80.
-- PHP 8.3 integrado y operativo.
-- MariaDB en funcionamiento.
-- Interfaz phpMyAdmin accesible desde el navegador.
-  ![Descripción](images/9.png)
-  ![Descripción](images/10.png)
+### ✅ Lo que se consigue
+- Servidor web Apache escuchando en el puerto 80.
+- PHP 8.3 listo para ejecutar código del lado del servidor.
+- MariaDB arrancado y aceptando conexiones.
+- phpMyAdmin disponible vía navegador para administración de BD.
+
+![Apache activo](images/9.png)
+![phpMyAdmin](images/10.png)
 
 ---
 
-## 🤖 3. Script de creación automática de clientes
+## 🤖 3. Automatización del alta de clientes
 
-### 📝 Objetivo
-Crear un script de bash que, dado un nombre de cliente, genere de forma automática todos los recursos necesarios para alojar su sitio web en el servidor.
+### 📝 ¿Qué se hace en este paso?
+Se desarrolla un script bash que permite dar de alta un nuevo cliente de forma completamente automatizada. Con un solo comando se crea todo lo necesario para que ese cliente tenga su propio espacio web funcional en el servidor.
 
-### 📂 Ubicación del script
+### 📂 Ruta del script
 
 ```
 ~/infraestructura-web/scripts/crear_cliente.sh
 ```
 
-### ▶️ Modo de uso
+### ▶️ Cómo se ejecuta
 
 ```bash
 sudo ./crear_cliente.sh cliente1 192.168.1.135
 ```
 
-### ✅ Tareas que realiza el script
-- Alta del usuario en el sistema Linux
-- Creación del directorio web correspondiente
-- Generación de página de inicio por defecto
-- Registro del VirtualHost en Apache
-- Añadido automático de la entrada DNS
-- Creación de la base de datos y usuario MySQL asociado
-- Generación de una contraseña aleatoria segura
-![Descripción](images/2.png)
-![Descripción](images/3.png)
+### ✅ Qué hace el script por nosotros
+- Crea el usuario del sistema operativo
+- Genera su directorio web con los permisos adecuados
+- Publica una página de bienvenida inicial
+- Da de alta el VirtualHost correspondiente en Apache
+- Registra el subdominio en el servidor DNS
+- Crea una base de datos y un usuario MySQL exclusivos para ese cliente
+- Asigna una contraseña robusta generada aleatoriamente
+
+![Script ejecutándose](images/2.png)
+![Resultado del script](images/3.png)
+
 ---
 
-## 🔐 4. FTP seguro, acceso SSH y soporte Python
+## 🔐 4. Acceso remoto seguro y soporte Python
 
-### 📝 Objetivo
-Habilitar transferencia de ficheros cifrada y acceso remoto por consola, además de dar soporte a aplicaciones Python a través de Apache.
+### 📝 ¿Qué se hace en este paso?
+Se configura el acceso remoto al servidor tanto por FTP (con cifrado) como por SSH y SFTP. Además, se habilita el módulo mod_wsgi para poder ejecutar aplicaciones Python desde Apache.
 
-### 📦 Paquetes instalados
+### 📦 Instalación
 
 ```bash
 sudo apt install -y \
@@ -131,17 +136,17 @@ openssh-server \
 libapache2-mod-wsgi-py3
 ```
 
-### 🔧 Ajustes en vsftpd
+### 🔧 Configuración de vsftpd
 
-**Archivo de configuración:** `/etc/vsftpd.conf`
+**Fichero:** `/etc/vsftpd.conf`
 
-**Parámetros clave:**
+**Opciones activadas:**
 ```
 ssl_enable=YES
 chroot_local_user=YES
 ```
 
-### 🔥 Apertura de puertos en el firewall
+### 🔥 Reglas de firewall
 
 ```bash
 sudo ufw allow 21/tcp
@@ -149,26 +154,27 @@ sudo ufw allow 22/tcp
 sudo ufw allow 40000:40100/tcp
 ```
 
-### 🐍 Módulo WSGI para Python
+### 🐍 Soporte para aplicaciones Python
 
 ```bash
 sudo a2enmod wsgi
 sudo systemctl reload apache2
 ```
 
-### ✅ Resultado
-- Transferencias FTP cifradas con TLS.
-- SSH y SFTP disponibles para todos los clientes.
-- Aplicaciones Python desplegables a través de mod_wsgi.
-  ![Descripción](images/4.png)
-  ![Descripción](images/5.png)
+### ✅ Lo que se consigue
+- FTP funcionando sobre TLS, sin transmisión de datos en claro.
+- Acceso SSH y SFTP habilitado para cada cliente.
+- Apache preparado para servir aplicaciones escritas en Python.
+
+![FTP configurado](images/4.png)
+![SSH funcionando](images/5.png)
 
 ---
 
-## 🌍 5. Servidor DNS local con BIND9
+## 🌍 5. Servicio DNS con BIND9
 
-### 📝 Objetivo
-Configurar un servidor DNS autoritativo para el dominio `marisma.local`, con resolución tanto directa como inversa, e integrado con el script de clientes.
+### 📝 ¿Qué se hace en este paso?
+Se monta un servidor DNS propio para el dominio `marisma.local`. Esto permite que los clientes sean accesibles por nombre de dominio dentro de la red local, sin depender de ningún servidor externo.
 
 ### 📦 Instalación
 
@@ -177,15 +183,14 @@ sudo apt install -y \
 bind9 bind9-utils bind9-doc dnsutils
 ```
 
-### 🔧 Zonas definidas
+### 🔧 Zonas configuradas
 
-**Fichero principal:** `/etc/bind/named.conf.local`
+**Fichero de zonas:** `/etc/bind/named.conf.local`
 
-**Zonas configuradas:**
-- `marisma.local` → resolución directa
-- `1.168.192.in-addr.arpa` → resolución inversa
+- `marisma.local` → resolución de nombre a IP
+- `1.168.192.in-addr.arpa` → resolución inversa de IP a nombre
 
-### 🧪 Comprobación de sintaxis
+### 🧪 Validación de la configuración
 
 ```bash
 sudo named-checkconf
@@ -194,7 +199,7 @@ sudo named-checkzone marisma.local \
 /etc/bind/db.marisma.local
 ```
 
-### 🔍 Pruebas de resolución
+### 🔍 Pruebas de DNS
 
 ```bash
 dig @192.168.1.135 cliente1.marisma.local
@@ -202,81 +207,83 @@ dig @192.168.1.135 cliente1.marisma.local
 dig @192.168.1.135 -x 192.168.1.135
 ```
 
-### ✅ Resultado
-- Resolución directa operativa.
-- Resolución inversa configurada y funcional.
-- El script de clientes actualiza las zonas DNS de forma automática.
-![Descripción](images/6.png)
-![Descripción](images/6.png)
+### ✅ Lo que se consigue
+- Resolución directa funcionando para todos los subdominios.
+- Resolución inversa activa y correctamente configurada.
+- Cada nuevo cliente queda registrado en DNS de forma automática gracias al script.
+
+![DNS activo](images/6.png)
+![Prueba dig](images/7.png)
+
 ---
 
-## 🧪 6. Pruebas y verificación del sistema
+## 🧪 6. Comprobaciones finales
 
-### 📋 Estado de los servicios
+### 📋 Revisión del estado de todos los servicios
 
 ```bash
 sudo systemctl status \
 apache2 mariadb named vsftpd ssh
 ```
 
-### 🌐 Comprobación HTTP
+### 🌐 Prueba de respuesta HTTP
 
 ```bash
 curl http://192.168.1.135
 ```
 
-### 🗄️ Comprobación de bases de datos
+### 🗄️ Verificación de bases de datos
 
 ```bash
 sudo mysql -e "SHOW DATABASES;"
 ```
 
-### 🌍 Resolución DNS
+### 🌍 Prueba de resolución DNS
 
 ```bash
 dig @192.168.1.135 cliente1.marisma.local +short
 ```
 
-### 🔐 Acceso SSH
+### 🔐 Prueba de acceso SSH
 
 ```bash
 ssh cliente1@192.168.1.135
 ```
 
 ### ✅ Conclusión
-Todos los servicios respondieron correctamente durante las pruebas, confirmando la integración completa del entorno.
+Tras ejecutar todas las pruebas, los servicios respondieron sin errores. El sistema funciona de forma coordinada: Apache sirve las webs, MariaDB gestiona los datos, BIND9 resuelve los dominios y SSH/FTP dan acceso seguro a los usuarios.
 
 ---
 
-## 🚀 Guía de uso del servidor
+## 🚀 Manual de uso
 
-### Alta de un nuevo cliente
+### Dar de alta un nuevo cliente
 
 ```bash
 sudo ~/infraestructura-web/scripts/crear_cliente.sh empresa 192.168.1.135
 ```
 
-### Recursos generados automáticamente
-- Usuario Linux del sistema
-- Directorio web propio
+### El sistema crea automáticamente
+- Usuario en el sistema Linux
+- Carpeta web personal
 - VirtualHost en Apache
-- Subdominio DNS registrado
-- Base de datos exclusiva
-- Usuario MySQL con permisos sobre su BD
-- Contraseña segura generada al momento
+- Entrada DNS con su subdominio
+- Base de datos propia
+- Credenciales MySQL únicas
+- Contraseña aleatoria y segura
 
-### 🌐 Puntos de acceso disponibles
+### 🌐 Cómo acceder a los servicios
 
-| Recurso | Dirección |
+| Servicio | Dirección |
 |---|---|
-| Sitio web del cliente | `http://empresa.marisma.local` |
-| phpMyAdmin | `http://192.168.1.135/phpmyadmin` |
-| Consola SSH | `ssh empresa@192.168.1.135` |
-| Transferencia SFTP | `sftp empresa@192.168.1.135` |
+| Web del cliente | `http://empresa.marisma.local` |
+| Panel phpMyAdmin | `http://192.168.1.135/phpmyadmin` |
+| Terminal SSH | `ssh empresa@192.168.1.135` |
+| Gestor de ficheros SFTP | `sftp empresa@192.168.1.135` |
 
 ---
 
-## 🏗️ Resumen de la arquitectura
+## 🏗️ Visión general de la infraestructura
 
 | Servicio | Tecnología | Puerto |
 |---|---|---|
@@ -290,19 +297,19 @@ sudo ~/infraestructura-web/scripts/crear_cliente.sh empresa 192.168.1.135
 
 ---
 
-## 🔒 Seguridad implementada
+## 🔒 Medidas de seguridad aplicadas
 
-- Cifrado TLS en las conexiones FTP
-- Jaula chroot por usuario para evitar acceso al sistema de ficheros
-- Acceso remoto exclusivamente por SSH/SFTP
-- Contraseñas generadas aleatoriamente en cada alta
-- Base de datos independiente por cliente
-- Validación de zonas DNS antes de aplicar cambios
-- Permisos restrictivos sobre los directorios web
+- FTP con cifrado TLS activado
+- Usuarios confinados en su directorio mediante chroot
+- Todo acceso remoto pasa por SSH o SFTP
+- Contraseñas únicas y aleatorias en cada alta
+- Cada cliente tiene su propia base de datos aislada
+- Las zonas DNS se validan antes de recargarse
+- Directorios web con permisos mínimos necesarios
 
 ---
 
-## 📁 Estructura del proyecto
+## 📁 Estructura de ficheros del proyecto
 
 ```
 ~/infraestructura-web/
@@ -314,37 +321,37 @@ sudo ~/infraestructura-web/scripts/crear_cliente.sh empresa 192.168.1.135
 
 ---
 
-## ✅ Objetivos completados
+## ✅ Resumen de objetivos alcanzados
 
-- ✔ Servidor web instalado y configurable por cliente
-- ✔ Soporte para sitios estáticos y dinámicos
-- ✔ Automatización completa mediante scripts bash
-- ✔ Resolución DNS local operativa
-- ✔ MariaDB integrado con phpMyAdmin
-- ✔ FTP cifrado con TLS
-- ✔ SSH y SFTP habilitados
-- ✔ Aplicaciones Python via mod_wsgi
-- ✔ VirtualHosts generados automáticamente
-- ✔ Gestión multiusuario implementada
-
----
-
-## 🎓 Entorno utilizado
-
-- Ubuntu 24.04 LTS
-- VirtualBox con adaptador en modo puente
-- Arquitectura x86_64
-- Dominio local: `marisma.local`
+- ✔ Servidor web funcional con soporte multicliente
+- ✔ Alojamiento de sitios tanto estáticos como dinámicos
+- ✔ Script bash de automatización completo
+- ✔ DNS local resolviendo nombres correctamente
+- ✔ MariaDB gestionado con phpMyAdmin
+- ✔ FTP seguro con TLS operativo
+- ✔ SSH y SFTP habilitados para todos los usuarios
+- ✔ Módulo Python mod_wsgi activo en Apache
+- ✔ VirtualHosts creados de forma automática
+- ✔ Arquitectura preparada para varios clientes simultáneos
 
 ---
 
-## 📌 Estado final del proyecto
+## 🎓 Especificaciones del entorno
+
+- Ubuntu 24.04 LTS como sistema base
+- Virtualización con VirtualBox en modo puente
+- Arquitectura de 64 bits (x86_64)
+- Dominio interno: `marisma.local`
+
+---
+
+## 📌 Estado del despliegue
 
 | Componente | Estado |
 |---|---|
-| Apache | ✅ Correcto |
-| DNS (BIND9) | ✅ Correcto |
-| Bases de datos | ✅ Operativas |
-| VirtualHosts | ✅ Funcionando |
-| FTP / SSH | ✅ Activos |
-| Automatización | ✅ Implementada |
+| Apache | ✅ Operativo |
+| DNS (BIND9) | ✅ Operativo |
+| Bases de datos | ✅ Funcionando |
+| VirtualHosts | ✅ Activos |
+| FTP / SSH | ✅ Disponibles |
+| Script automatización | ✅ Probado y funcional |
