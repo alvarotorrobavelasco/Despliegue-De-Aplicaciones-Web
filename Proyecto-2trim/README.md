@@ -82,6 +82,8 @@ sudo systemctl reload apache2
 - PHP 8.3 integrado y operativo.
 - MariaDB en funcionamiento.
 - Interfaz phpMyAdmin accesible desde el navegador.
+  ![Descripción](images/2.png)
+  ![Descripción](images/3.png)
 
 ---
 
@@ -110,7 +112,8 @@ sudo ./crear_cliente.sh cliente1 192.168.1.135
 - Añadido automático de la entrada DNS
 - Creación de la base de datos y usuario MySQL asociado
 - Generación de una contraseña aleatoria segura
-
+![Descripción](images/4.png)
+![Descripción](images/5.png)
 ---
 
 ## 🔐 4. FTP seguro, acceso SSH y soporte Python
@@ -156,6 +159,8 @@ sudo systemctl reload apache2
 - Transferencias FTP cifradas con TLS.
 - SSH y SFTP disponibles para todos los clientes.
 - Aplicaciones Python desplegables a través de mod_wsgi.
+  ![Descripción](images/6.png)
+  ![Descripción](images/7.png)
 
 ---
 
