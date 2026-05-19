@@ -112,8 +112,8 @@ sudo ./crear_cliente.sh cliente1 192.168.1.135
 - Añadido automático de la entrada DNS
 - Creación de la base de datos y usuario MySQL asociado
 - Generación de una contraseña aleatoria segura
-![Descripción](images/4.png)
-![Descripción](images/5.png)
+![Descripción](images/2.png)
+![Descripción](images/3.png)
 ---
 
 ## 🔐 4. FTP seguro, acceso SSH y soporte Python
@@ -159,8 +159,8 @@ sudo systemctl reload apache2
 - Transferencias FTP cifradas con TLS.
 - SSH y SFTP disponibles para todos los clientes.
 - Aplicaciones Python desplegables a través de mod_wsgi.
-  ![Descripción](images/6.png)
-  ![Descripción](images/7.png)
+  ![Descripción](images/4.png)
+  ![Descripción](images/5.png)
 
 ---
 
@@ -205,7 +205,8 @@ dig @192.168.1.135 -x 192.168.1.135
 - Resolución directa operativa.
 - Resolución inversa configurada y funcional.
 - El script de clientes actualiza las zonas DNS de forma automática.
-
+![Descripción](images/6.png)
+![Descripción](images/6.png)
 ---
 
 ## 🧪 6. Pruebas y verificación del sistema
